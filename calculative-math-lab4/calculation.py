@@ -27,7 +27,7 @@ def calc_deviation(data, points, func):
     data["standard_deviation"] = standard_deviation(temp, n)
 
 
-# Получение определителя матрицы, декларативная функция
+# Получение определителя матрицы
 def get_determinant(matrix):
     n = len(matrix)
     if n != 1:

@@ -16,7 +16,7 @@ def lagrange_interpolation(points, x):
     return lx
 
 
-def newton_interpolation(points, x):
+def newton_interpolation(points, x, print_answer = False):
     """Многочлен Ньютона с конечными  разностями"""
     n = len(points)
     h = points[1][0] - points[0][0]
@@ -42,7 +42,7 @@ def newton_interpolation(points, x):
     # Идем с начала интеравла первая формула Ньютона
     else:
         x1_index = 0
-        for i in range(1, n):
+        for i in range(0, n):
             if points[i][0] >= x:
                 x1_index = i - 1
                 break
@@ -55,5 +55,8 @@ def newton_interpolation(points, x):
                 numerator *= t - j
             numerator *= differences_matrix[i][x1_index]
             nx += numerator / math.factorial(i)
-
+        if print_answer:
+            print(f"Метод Ньютона ход с начала индекс старта: {x1_index}")
+            for i in range(n):
+                print(differences_matrix[i])
     return nx

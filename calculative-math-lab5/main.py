@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def set_interpolation_calc():
-    while True:
+    """while True:
         try:
             print("1 Многочлен Лагранжа\n2 Многочлен Ньютона с конечными  разностями")
             interpolation_type = int(input("Введите метод интерполяции: "))
@@ -14,7 +14,7 @@ def set_interpolation_calc():
             else:
                 break
         except:
-            print("Некорректный ввод")
+            print("Некорректный ввод")"""
 
     while True:
         try:
@@ -26,7 +26,7 @@ def set_interpolation_calc():
                 break
         except:
             print("Некорректный ввод")
-    return interpolation_type, source_type
+    return source_type
 
 
 def enter_x_arg():
@@ -38,7 +38,7 @@ def enter_x_arg():
             print("Некоректный ввод")
 
 
-def plot_chart(x, y, abscissa, ordinates, answer):
+def plot_chart(x, y, abscissa, ordinates, answer1, answer2):
     gr = plt.gca()
     gr.spines['left'].set_position('zero')
     gr.spines['top'].set_color('none')
@@ -46,7 +46,9 @@ def plot_chart(x, y, abscissa, ordinates, answer):
     gr.spines['right'].set_color('none')
     plt.plot(abscissa, ordinates, color='r', label="Интерполирующая функция")
     plt.plot(x, y, 'o', color='g', label="Входной набор точек")
-    plt.plot(answer[0], answer[1], marker="D", color="b", label="Результат интерполяции")
+    plt.plot(answer1[0], answer1[1], marker="D", color="b", label="Результат интерполяции Лагранж")
+    plt.plot(answer2[0], answer2[1], marker="D", color="b", label="Результат интерполяции Ньютон")
+
     gr.plot(1, 0, marker=">", color='k', transform=gr.get_yaxis_transform(), clip_on=False)
     gr.plot(0, 1, marker="^", color='k', transform=gr.get_xaxis_transform(), clip_on=False)
     plt.legend()
@@ -54,7 +56,7 @@ def plot_chart(x, y, abscissa, ordinates, answer):
 
 
 if __name__ == '__main__':
-    interpolation_type, source_type = set_interpolation_calc()
+    source_type = set_interpolation_calc()
     if source_type == 1:
         dots = get_data()
     elif source_type == 2:
@@ -67,13 +69,9 @@ if __name__ == '__main__':
     x = enter_x_arg()
     x_coords = np.linspace(dots[0][0], dots[n - 1][0], 80)
 
-    if interpolation_type == 1:
-        result = lagrange_interpolation(dots, x)
-        y_coords = [lagrange_interpolation(dots, x_coord) for x_coord in x_coords]
-    elif interpolation_type == 2:
-        result = newton_interpolation(dots, x)
-        y_coords = [newton_interpolation(dots, x_coord) for x_coord in x_coords]
+    result1 = lagrange_interpolation(dots, x)
+    result2 = newton_interpolation(dots, x, print_answer=True)
+    y_coords = [lagrange_interpolation(dots, x_coord) for x_coord in x_coords]
+    print(f"Результат интерполяции:Лагранж {result1} Ньютон {result2}")
+    plot_chart(points_x, points_y, x_coords, y_coords, [x, result1], [x, result2])
 
-    plot_chart(points_x, points_y, x_coords, y_coords, [x, result])
-
-    print(f"Результат интерполяции: {result}")
