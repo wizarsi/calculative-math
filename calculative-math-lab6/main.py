@@ -15,8 +15,6 @@ def plot_chart(coordinates_runge, coordinates_milan, x0, y0):
     plt.plot([dot[0] for dot in coordinates_milan], [dot[1] for dot in coordinates_milan], color='g',
              label="Метод Малана")
     plt.plot(x0, y0, marker="D", color="b", label="Начальная точка")
-    gr.plot(1, 0, marker=">", color='k', transform=gr.get_yaxis_transform(), clip_on=False)
-    gr.plot(0, 1, marker="^", color='k', transform=gr.get_xaxis_transform(), clip_on=False)
     plt.legend()
     plt.show()
 
@@ -25,7 +23,7 @@ def print_table(dots, method_name):
     print(f"Результат для {method_name}:")
     result_table = pd.DataFrame({'x': [dot[0] for dot in dots], 'y': [dot[1] for dot in dots]})
     result_table.index.name = '№'
-    pd.set_option('display.max_rows', None)
+    #pd.set_option('display.max_rows', None)
 
     print(result_table)
 
