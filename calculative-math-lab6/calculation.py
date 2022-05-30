@@ -35,24 +35,24 @@ def runge_kutta(a, b, x0, y0, h, equation):
     return dots
 
 
-def runge_kutta_calculate(a, b, x0, y0, h, accuracy, equation, max_n=15):
+def runge_kutta_calculate(a, b, x0, y0, h, accuracy, equation, max_n=5):
     right_result = runge_kutta(a, b, x0, y0, h, equation)
-    left_result = runge_kutta(a, b, x0, y0, -h, equation)
-    result = merge_results_step_1(left_result, right_result)
+    """left_result = runge_kutta(a, b, x0, y0, -h, equation)
+    result = merge_results_step_1(left_result, right_result)"""
 
-    last_y = result[len(result) - 1][1]
+    last_y = right_result[len(right_result) - 1][1]
     loop_h = h
     for i in range(max_n):
         loop_h /= 2
         right_result = runge_kutta(a, b, x0, y0, loop_h, equation)
         current_y = right_result[len(right_result) - 1][1]
         if abs((last_y - current_y)) / (2 ** 4 - 1) <= accuracy:
-            left_result = runge_kutta(a, b, x0, y0, -loop_h, equation)
-            result = merge_results_step_1(left_result, right_result)
+            """left_result = runge_kutta(a, b, x0, y0, -loop_h, equation)
+            result = merge_results_step_1(left_result, right_result)"""
             break
         last_y = current_y
 
-    return result
+    return right_result
 
 
 def miln(a, b, x0, h, accuracy, equation, dots, derivatives):
@@ -78,7 +78,7 @@ def miln(a, b, x0, h, accuracy, equation, dots, derivatives):
             y_prediction = y_correction
             local_derivatives[i] = equation(current_x, y_prediction)
             y_correction = result[i - 2][1] + (h / 3) * (
-                    local_derivatives[i - 2] + 4 * local_derivatives[i - 1] + local_derivatives[i])
+                        local_derivatives[i - 2] + 4 * local_derivatives[i - 1] + local_derivatives[i])
         result.append(tuple([round(current_x, 3), y_prediction]))
 
     return result
@@ -90,7 +90,7 @@ def runge_kutta_4_dots(x0, y0, h, equation):
 
     for i in range(1, 4):
         last_x = dots[i - 1][0]
-        last_y = dots[i - 1][1]
+        last_y = dots[i - 1][-1]
         current_y = last_y + delta_y(last_x, last_y, h, equation)
         current_x = last_x + h
         dots.append(tuple([current_x, current_y]))
@@ -98,24 +98,10 @@ def runge_kutta_4_dots(x0, y0, h, equation):
     return dots, derivatives
 
 
-def miln_calculate(a, b, x0, y0, h, accuracy, equation, max_n=15):
+def miln_calculate(a, b, x0, y0, h, accuracy, equation):
     dots, derivatives = runge_kutta_4_dots(x0, y0, h, equation)
 
     right_result = miln(a, b, x0, h, accuracy, equation, dots, derivatives)
     left_result = miln(a, b, x0, -h, accuracy, equation, dots, derivatives)
     result = merge_results_step_4(left_result, right_result)
-
-    last_y = result[len(result) - 1][1]
-    loop_h = h
-    for i in range(max_n):
-        loop_h /= 2
-        dots, derivatives = runge_kutta_4_dots(x0, y0, loop_h, equation)
-        right_result = miln(a, b, x0, loop_h, accuracy, equation, dots, derivatives)
-        current_y = right_result[len(right_result) - 1][1]
-        if abs((last_y - current_y)) / (2 ** 4 - 1) <= accuracy:
-            left_result = miln(a, b, x0, -loop_h, accuracy, equation, dots, derivatives)
-            result = merge_results_step_4(left_result, right_result)
-            break
-        last_y = current_y
-
     return result

@@ -1,13 +1,16 @@
-import numpy as np
+import math
 
 
 def get_сauchy_equation(task_number):
     if task_number == 1:
-        return lambda x, y: x ** 3 + y
+        return lambda x, y: x ** 2 + y, lambda c, x: c * math.e ** x - x ** 2 - 2 * x - 2 \
+            , lambda x, y: (y + x ** 2 + 2 * x + 2) / (math.e ** x)
     if task_number == 2:
-        return lambda x, y: y + np.cos(x)
+        return lambda x, y: y + math.cos(x), lambda x, c: math.sin(x) * 0.5 - math.sin(x) * 0.5 + c * math.e ** x, \
+               lambda x, y: (-math.sin(x) * 0.5 + math.sin(x) * 0.5 + y) / (math.e ** x)
     if task_number == 3:
-        return lambda x, y: (2 * y) ** 0.5 + x ** 2
+        return lambda x, y: (2 * y) + x ** 2, lambda x, c: c * math.e ** (2 * x) - (x ** 2) * 0.5 - x / 2 - 1 / 4, \
+               lambda x, y: (y + (x ** 2) * 0.5 + x / 2 + 1 / 4) / (math.e ** (2 * x))
 
 
 def enter_value(text):
@@ -22,10 +25,10 @@ def enter_value(text):
 def get_data():
     while True:
         try:
-            print("1 y' = x^3 + y\n2 y' = y + cos(x)\n3 y' = (2 * y)^0.5 + x^2")
+            print("1 y' = x^2 + y\n2 y' = y + cos(x)\n3 y' = (2 * y) + x^2")
             task_number = int(input("Выберите задачу Коши: "))
             if task_number >= 1 and task_number <= 3:
-                equation = get_сauchy_equation(task_number)
+                equation1, equation2, equation3 = get_сauchy_equation(task_number)
                 break
             else:
                 print("Нет такой задачи")
@@ -55,4 +58,5 @@ def get_data():
         if a <= 0:
             print("a должно быть >0")
 
-    return {"a": borders[0], "b": borders[1], "x0": x0, "y0": y0, "h": h, "accuracy": a, "equation": equation}
+    return {"a": borders[0], "b": borders[1], "x0": x0, "y0": y0, "h": h, "accuracy": a, "equation1": equation1,
+            "equation2": equation2, "equation3": equation3}
